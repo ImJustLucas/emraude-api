@@ -13,30 +13,25 @@ export const UpdateProgressSwaggerDocs = () =>
     ApiOperation({
       summary: "Update user progress",
       description:
-        "Update the game progression (level, score) of the authenticated user",
+        "Update the game progression (level, score) of the authenticated user. The lastPlayedAt field is automatically updated to the current time.",
     }),
     ApiBearerAuth(),
     ApiBody({
       schema: {
         type: "object",
+        required: ["currentLevel", "totalScore"],
         properties: {
           currentLevel: {
             type: "number",
             minimum: 1,
             example: 6,
-            description: "New current level (optional)",
+            description: "New current level",
           },
           totalScore: {
             type: "number",
             minimum: 0,
             example: 1500,
-            description: "New total score (optional)",
-          },
-          lastPlayedAt: {
-            type: "string",
-            format: "date-time",
-            example: "2023-12-07T11:00:00Z",
-            description: "Date of game session (optional)",
+            description: "New total score",
           },
         },
       },

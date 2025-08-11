@@ -32,25 +32,15 @@ export class ProgressService {
     userId: string,
     updateData: UpdateProgressDto,
   ): Promise<Progress> {
-    const updateFields: Partial<Progress> = {
-      lastPlayedAt: new Date(),
-    };
-
-    if (updateData.currentLevel !== undefined) {
-      updateFields.currentLevel = updateData.currentLevel;
-    }
-
-    if (updateData.totalScore !== undefined) {
-      updateFields.totalScore = updateData.totalScore;
-    }
-
-    if (updateData.lastPlayedAt !== undefined) {
-      updateFields.lastPlayedAt = new Date(updateData.lastPlayedAt);
-    }
-
     const progress = await this.progressModel.findOneAndUpdate(
       { userId },
-      { $set: updateFields },
+      {
+        $set: {
+          currentLevel: updateData.currentLevel,
+          totalScore: updateData.totalScore,
+          lastPlayedAt: new Date(),
+        },
+      },
       { new: true, upsert: true },
     );
 
