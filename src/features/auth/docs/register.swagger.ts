@@ -1,11 +1,18 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiCreatedResponse, ApiConflictResponse, ApiOperation, ApiBadRequestResponse } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+} from "@nestjs/swagger";
 
 export const RegisterSwaggerDocs = () =>
   applyDecorators(
     ApiOperation({
       summary: "Register a new user",
-      description: "Create a new user account with email, password and username",
+      description:
+        "Create a new user account with email, password and username",
     }),
     ApiBody({
       schema: {
@@ -112,7 +119,10 @@ export const RegisterSwaggerDocs = () =>
             items: {
               type: "string",
             },
-            example: ["Invalid email format", "Password must be at least 6 characters"],
+            example: [
+              "Invalid email format",
+              "Password must be at least 6 characters",
+            ],
           },
           error: {
             type: "string",

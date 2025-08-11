@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { PassportStrategy } from "@nestjs/passport";
+
 import { Model } from "mongoose";
 import { ExtractJwt, Strategy } from "passport-jwt";
-
 import { IJwtPayload } from "src/common/types";
 import { User, UserDocument } from "src/features/users/schemas/user.schema";
 
@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: IJwtPayload) {
+  async validate(payload: IJwtPayload): Promise<IJwtPayload> {
     const user = await this.userModel.findById(payload.sub);
 
     if (!user || !user.isActive) {

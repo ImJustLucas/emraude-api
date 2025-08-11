@@ -3,13 +3,16 @@ import {
   Controller,
   Get,
   Post,
-  Request,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
-import { UsersService } from "../../users/services/users.service";
+import { User } from "../../../common/decorators/user.decorator";
+import { UserInterceptor } from "../../../common/interceptors/user.interceptor";
+import { ZodValidationPipe } from "../../../common/pipes/zod-validation.pipe";
+import { User as UserEntity } from "../../users/schemas/user.schema";
 import { mapUserToResponse } from "../../users/utils/user-mapper";
 import { LoginSwaggerDocs } from "../docs/login.swagger";
 import { MeSwaggerDocs } from "../docs/me.swagger";
@@ -19,23 +22,10 @@ import { type SignupDto, SignupSchema } from "../dtos/signup.dto";
 import { AuthenticationGuard } from "../guards/authentication.guard";
 import { AuthService } from "../services/auth.service";
 
-import { ZodValidationPipe } from "src/common/pipes/zod-validation.pipe";
-
-interface IAuthenticatedRequest extends Request {
-  user: {
-    sub: string;
-    email: string;
-    role: string;
-  };
-}
-
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post("register")
   @RegisterSwaggerDocs()
@@ -54,8 +44,8 @@ export class AuthController {
   @Get("me")
   @MeSwaggerDocs()
   @UseGuards(AuthenticationGuard)
-  async getProfile(@Request() req: IAuthenticatedRequest) {
-    const user = await this.usersService.findById(req.user.sub);
+  @UseInterceptors(UserInterceptor)
+  me(@User() user: UserEntity) {
     return mapUserToResponse(user);
   }
 }

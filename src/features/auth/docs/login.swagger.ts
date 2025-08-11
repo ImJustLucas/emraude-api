@@ -1,5 +1,11 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiUnauthorizedResponse, ApiOperation, ApiBadRequestResponse } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
 
 export const LoginSwaggerDocs = () =>
   applyDecorators(

@@ -1,11 +1,18 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOkResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiBadRequestResponse } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+} from "@nestjs/swagger";
 
 export const GetUserSwaggerDocs = () =>
   applyDecorators(
     ApiOperation({
       summary: "Get user by ID",
-      description: "Retrieve a user's public profile information by their unique identifier",
+      description:
+        "Retrieve a user's public profile information by their unique identifier",
     }),
     ApiParam({
       name: "id",
