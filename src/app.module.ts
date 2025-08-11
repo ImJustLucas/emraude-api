@@ -1,9 +1,28 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 
+import { CommonModule } from "./common/common.module";
+import { DatabaseModule } from "./core/database/database.core";
+import { AuthModule } from "./features/auth/auth.module";
+import { LeaderboardModule } from "./features/leaderboard/leaderboard.module";
+import { MatchModule } from "./features/match/match.module";
+import { ProgressModule } from "./features/progress/progress.module";
+import { UsersModule } from "./features/users/users.module";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    DatabaseModule,
+    CommonModule,
+    AuthModule,
+    UsersModule,
+    ProgressModule,
+    MatchModule,
+    LeaderboardModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
