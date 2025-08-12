@@ -6,8 +6,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { IMatchResponse, MatchStateEnum } from "../../../common/types";
-import { MatchResponseDto } from "../dtos/match-response.dto";
+import { MatchStateEnum } from "../../../common/types";
 import type { MatchResultDto } from "../dtos/match-result.dto";
 import { Match, MatchDocument } from "../schemas/match.schema";
 
@@ -48,7 +47,7 @@ export class MatchService {
     return match;
   }
 
-  async create(userId: string): Promise<MatchResponseDto> {
+  async create(userId: string): Promise<MatchDocument> {
     const existingMatch = (await this.matchModel
       .findOne({
         $and: [
@@ -67,7 +66,7 @@ export class MatchService {
       ])) as unknown as IPopulatedMatch | null;
 
     if (existingMatch) {
-      return this.mapMatchToResponse(existingMatch);
+      return existingMatch as unknown as MatchDocument;
     }
 
     const waitingMatch = await this.matchModel.findOne({
@@ -80,14 +79,14 @@ export class MatchService {
       waitingMatch.state = MatchStateEnum.PLAYING;
       const updatedMatch = await waitingMatch.save();
 
-      const populatedMatch = (await this.matchModel
+      const populatedMatch = await this.matchModel
         .findById(updatedMatch._id)
         .populate([
           { path: "player1Id", select: "username" },
           { path: "player2Id", select: "username" },
-        ])) as unknown as IPopulatedMatch;
+        ]);
 
-      return this.mapMatchToResponse(populatedMatch);
+      return populatedMatch as MatchDocument;
     }
 
     const newMatch = new this.matchModel({
@@ -96,20 +95,20 @@ export class MatchService {
     });
 
     const savedMatch = await newMatch.save();
-    const populatedMatch = (await this.matchModel
+    const populatedMatch = await this.matchModel
       .findById(savedMatch._id)
       .populate({
         path: "player1Id",
         select: "username",
-      })) as unknown as IPopulatedMatch;
+      });
 
-    return this.mapMatchToResponse(populatedMatch);
+    return populatedMatch as MatchDocument;
   }
 
   async getMatchById(
     matchId: string,
     requestingUserId: string,
-  ): Promise<MatchResponseDto> {
+  ): Promise<MatchDocument> {
     const match = (await this.matchModel.findById(matchId).populate([
       { path: "player1Id", select: "username" },
       { path: "player2Id", select: "username" },
@@ -130,14 +129,14 @@ export class MatchService {
       );
     }
 
-    return this.mapMatchToResponse(match);
+    return match as unknown as MatchDocument;
   }
 
   async submitResult(
     matchId: string,
     resultDto: MatchResultDto,
     requestingUserId: string,
-  ): Promise<MatchResponseDto> {
+  ): Promise<MatchDocument> {
     const match = (await this.matchModel.findById(matchId).populate([
       { path: "player1Id", select: "username" },
       { path: "player2Id", select: "username" },
@@ -178,41 +177,14 @@ export class MatchService {
     match.winnerId = resultDto.winnerId as any;
 
     const updatedMatch = await match.save();
-    const populatedMatch = (await this.matchModel
+    const populatedMatch = await this.matchModel
       .findById(updatedMatch._id)
       .populate([
         { path: "player1Id", select: "username" },
         { path: "player2Id", select: "username" },
         { path: "winnerId", select: "username" },
-      ])) as unknown as IPopulatedMatch;
+      ]);
 
-    return this.mapMatchToResponse(populatedMatch);
-  }
-
-  private mapMatchToResponse(match: IPopulatedMatch): MatchResponseDto {
-    const response: IMatchResponse = {
-      id: match._id.toString(),
-      player1: {
-        id: match.player1Id._id.toString(),
-        username: match.player1Id.username,
-      },
-      player2: match.player2Id
-        ? {
-            id: match.player2Id._id.toString(),
-            username: match.player2Id.username,
-          }
-        : undefined,
-      state: match.state,
-      createdAt: match.createdAt,
-      winner: match.winnerId
-        ? {
-            id: match.winnerId._id.toString(),
-            username: match.winnerId.username,
-          }
-        : undefined,
-      updatedAt: match.updatedAt,
-    };
-
-    return new MatchResponseDto(response);
+    return populatedMatch as MatchDocument;
   }
 }

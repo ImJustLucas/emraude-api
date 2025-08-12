@@ -13,6 +13,15 @@ import { AppService } from "./app.service";
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath:
+        process.env["NODE_ENV"] === "production"
+          ? [".env.production", ".env"]
+          : [
+              ".env.development.local",
+              ".env.local",
+              ".env.development",
+              ".env",
+            ],
       isGlobal: true,
     }),
     DatabaseModule,

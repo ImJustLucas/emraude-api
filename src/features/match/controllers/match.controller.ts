@@ -18,9 +18,9 @@ import { User as UserEntity } from "../../users/schemas/user.schema";
 import { CreateMatchSwaggerDocs } from "../docs/create-match.swagger";
 import { GetMatchSwaggerDocs } from "../docs/get-match.swagger";
 import { SubmitResultSwaggerDocs } from "../docs/submit-result.swagger";
-import type { MatchResultDto } from "../dtos";
+import { MatchResultDto } from "../dtos";
 import { MatchResultSchema } from "../dtos";
-import type { MatchResponseDto } from "../dtos/match-response.dto";
+import { MatchDocument } from "../schemas/match.schema";
 import { MatchService } from "../services/match.service";
 
 @ApiTags("Match")
@@ -32,7 +32,7 @@ export class MatchController {
 
   @Post("create")
   @CreateMatchSwaggerDocs()
-  async createMatch(@User() user: UserEntity): Promise<MatchResponseDto> {
+  async createMatch(@User() user: UserEntity): Promise<MatchDocument> {
     const userId = (user._id as string).toString();
     return this.matchService.create(userId);
   }
@@ -42,7 +42,7 @@ export class MatchController {
   async getMatch(
     @Param("id") matchId: string,
     @User() user: UserEntity,
-  ): Promise<MatchResponseDto> {
+  ): Promise<MatchDocument> {
     const userId = (user._id as string).toString();
     return this.matchService.getMatchById(matchId, userId);
   }
@@ -54,7 +54,7 @@ export class MatchController {
     @Param("id") matchId: string,
     @Body() resultDto: MatchResultDto,
     @User() user: UserEntity,
-  ): Promise<MatchResponseDto> {
+  ): Promise<MatchDocument> {
     const userId = (user._id as string).toString();
     return this.matchService.submitResult(matchId, resultDto, userId);
   }

@@ -28,15 +28,15 @@ export const GetMatchSwaggerDocs = () =>
       schema: {
         type: "object",
         properties: {
-          id: {
+          _id: {
             type: "string",
             example: "507f1f77bcf86cd799439011",
             description: "Match unique identifier",
           },
-          player1: {
+          player1Id: {
             type: "object",
             properties: {
-              id: {
+              _id: {
                 type: "string",
                 example: "507f1f77bcf86cd799439012",
                 description: "Player 1 ID",
@@ -48,11 +48,11 @@ export const GetMatchSwaggerDocs = () =>
               },
             },
           },
-          player2: {
+          player2Id: {
             type: "object",
             nullable: true,
             properties: {
-              id: {
+              _id: {
                 type: "string",
                 example: "507f1f77bcf86cd799439013",
                 description: "Player 2 ID",
@@ -67,21 +67,15 @@ export const GetMatchSwaggerDocs = () =>
           },
           state: {
             type: "string",
-            enum: ["waiting", "playing", "finished"],
+            enum: ["waiting", "playing", "finished", "canceled"],
             example: "playing",
             description: "Current match state",
           },
-          createdAt: {
-            type: "string",
-            format: "date-time",
-            example: "2023-12-07T10:30:00Z",
-            description: "Match creation date",
-          },
-          winner: {
+          winnerId: {
             type: "object",
             nullable: true,
             properties: {
-              id: {
+              _id: {
                 type: "string",
                 description: "Winner ID",
               },
@@ -91,6 +85,12 @@ export const GetMatchSwaggerDocs = () =>
               },
             },
             description: "Winner info (only for finished matches)",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2023-12-07T10:30:00Z",
+            description: "Match creation date",
           },
           updatedAt: {
             type: "string",

@@ -26,17 +26,9 @@ export const SubmitResultSwaggerDocs = () =>
       example: "507f1f77bcf86cd799439011",
     }),
     ApiBody({
+      type: "application/json",
       schema: {
-        type: "object",
-        required: ["winnerId"],
-        properties: {
-          winnerId: {
-            type: "string",
-            pattern: "^[0-9a-fA-F]{24}$",
-            example: "507f1f77bcf86cd799439012",
-            description: "ID of the winning player (must be a participant)",
-          },
-        },
+        $ref: "#/components/schemas/MatchResultDto",
       },
     }),
     ApiOkResponse({
@@ -44,15 +36,15 @@ export const SubmitResultSwaggerDocs = () =>
       schema: {
         type: "object",
         properties: {
-          id: {
+          _id: {
             type: "string",
             example: "507f1f77bcf86cd799439011",
             description: "Match unique identifier",
           },
-          player1: {
+          player1Id: {
             type: "object",
             properties: {
-              id: {
+              _id: {
                 type: "string",
                 example: "507f1f77bcf86cd799439012",
                 description: "Player 1 ID",
@@ -64,10 +56,10 @@ export const SubmitResultSwaggerDocs = () =>
               },
             },
           },
-          player2: {
+          player2Id: {
             type: "object",
             properties: {
-              id: {
+              _id: {
                 type: "string",
                 example: "507f1f77bcf86cd799439013",
                 description: "Player 2 ID",
@@ -84,16 +76,10 @@ export const SubmitResultSwaggerDocs = () =>
             example: "finished",
             description: "Match state (will be 'finished')",
           },
-          createdAt: {
-            type: "string",
-            format: "date-time",
-            example: "2023-12-07T10:30:00Z",
-            description: "Match creation date",
-          },
-          winner: {
+          winnerId: {
             type: "object",
             properties: {
-              id: {
+              _id: {
                 type: "string",
                 example: "507f1f77bcf86cd799439012",
                 description: "Winner ID",
@@ -105,6 +91,12 @@ export const SubmitResultSwaggerDocs = () =>
               },
             },
             description: "Winner information",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2023-12-07T10:30:00Z",
+            description: "Match creation date",
           },
           updatedAt: {
             type: "string",

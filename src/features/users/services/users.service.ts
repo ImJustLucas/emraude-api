@@ -29,6 +29,12 @@ export class UsersService {
     return user;
   }
 
+  async findByIdForAuth(id: string): Promise<User | null> {
+    return (await this.userModel
+      .findById(id)
+      .select("-password")) as User | null;
+  }
+
   async create(createUserDto: ICreateUserDto): Promise<User> {
     const existingUser = await this.userModel.findOne({
       email: createUserDto.email.toLowerCase(),
