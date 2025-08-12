@@ -1,4 +1,4 @@
 export * from "./auth";
-export * from "./matchs";
+export * from "./leaderboard";
+export * from "./matches";
 export * from "./user";
-export * from "./leaderboard.types";

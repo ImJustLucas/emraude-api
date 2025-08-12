@@ -1,8 +1,61 @@
-import { Controller } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  UseInterceptors,
+  UsePipes,
+} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
+import { User } from "../../../common/decorators/user.decorator";
+import { UserInterceptor } from "../../../common/interceptors/user.interceptor";
+import { ZodValidationPipe } from "../../../common/pipes/zod-validation.pipe";
+import { AuthenticationGuard } from "../../auth/guards/authentication.guard";
+import { User as UserEntity } from "../../users/schemas/user.schema";
+import { CreateMatchSwaggerDocs } from "../docs/create-match.swagger";
+import { GetMatchSwaggerDocs } from "../docs/get-match.swagger";
+import { SubmitResultSwaggerDocs } from "../docs/submit-result.swagger";
+import type { MatchResultDto } from "../dtos";
+import { MatchResultSchema } from "../dtos";
+import type { MatchResponseDto } from "../dtos/match-response.dto";
 import { MatchService } from "../services/match.service";
 
+@ApiTags("Match")
 @Controller("match")
+@UseGuards(AuthenticationGuard)
+@UseInterceptors(UserInterceptor)
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
+
+  @Post("create")
+  @CreateMatchSwaggerDocs()
+  async createMatch(@User() user: UserEntity): Promise<MatchResponseDto> {
+    const userId = (user._id as string).toString();
+    return this.matchService.create(userId);
+  }
+
+  @Get(":id")
+  @GetMatchSwaggerDocs()
+  async getMatch(
+    @Param("id") matchId: string,
+    @User() user: UserEntity,
+  ): Promise<MatchResponseDto> {
+    const userId = (user._id as string).toString();
+    return this.matchService.getMatchById(matchId, userId);
+  }
+
+  @Post(":id/result")
+  @SubmitResultSwaggerDocs()
+  @UsePipes(new ZodValidationPipe(MatchResultSchema))
+  async submitResult(
+    @Param("id") matchId: string,
+    @Body() resultDto: MatchResultDto,
+    @User() user: UserEntity,
+  ): Promise<MatchResponseDto> {
+    const userId = (user._id as string).toString();
+    return this.matchService.submitResult(matchId, resultDto, userId);
+  }
 }

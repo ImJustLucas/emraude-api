@@ -46,6 +46,8 @@ export default typescriptEslint.config(
       "@typescript-eslint/no-empty-interface": "warn",
       "@typescript-eslint/no-use-before-define": "error",
       "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
 
       "@typescript-eslint/naming-convention": [
         "error",
