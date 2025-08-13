@@ -6,7 +6,6 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-  UsePipes,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
@@ -49,10 +48,9 @@ export class MatchController {
 
   @Post(":id/result")
   @SubmitResultSwaggerDocs()
-  @UsePipes(new ZodValidationPipe(MatchResultSchema))
   async submitResult(
     @Param("id") matchId: string,
-    @Body() resultDto: MatchResultDto,
+    @Body(new ZodValidationPipe(MatchResultSchema)) resultDto: MatchResultDto,
     @User() user: UserEntity,
   ): Promise<MatchDocument> {
     const userId = (user._id as string).toString();

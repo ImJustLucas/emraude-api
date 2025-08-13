@@ -5,7 +5,6 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-  UsePipes,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
@@ -29,15 +28,15 @@ export class AuthController {
 
   @Post("register")
   @RegisterSwaggerDocs()
-  @UsePipes(new ZodValidationPipe(SignupSchema))
-  async register(@Body() signupDto: SignupDto) {
+  async register(
+    @Body(new ZodValidationPipe(SignupSchema)) signupDto: SignupDto,
+  ) {
     return this.authService.register(signupDto);
   }
 
   @Post("login")
   @LoginSwaggerDocs()
-  @UsePipes(new ZodValidationPipe(LoginSchema))
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 

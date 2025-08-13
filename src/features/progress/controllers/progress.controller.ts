@@ -5,7 +5,6 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-  UsePipes,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
@@ -39,10 +38,10 @@ export class ProgressController {
 
   @Post("update")
   @UpdateProgressSwaggerDocs()
-  @UsePipes(new ZodValidationPipe(UpdateProgressSchema))
   async updateProgress(
     @User() user: UserEntity,
-    @Body() updateProgressDto: UpdateProgressDto,
+    @Body(new ZodValidationPipe(UpdateProgressSchema))
+    updateProgressDto: UpdateProgressDto,
   ) {
     const userId = (user._id as string).toString();
     const progress = await this.progressService.updateProgress(
