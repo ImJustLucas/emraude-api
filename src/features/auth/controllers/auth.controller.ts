@@ -12,7 +12,6 @@ import { User } from "../../../common/decorators/user.decorator";
 import { UserInterceptor } from "../../../common/interceptors/user.interceptor";
 import { ZodValidationPipe } from "../../../common/pipes/zod-validation.pipe";
 import { User as UserEntity } from "../../users/schemas/user.schema";
-import { mapUserToResponse } from "../../users/utils/user-mapper";
 import { LoginSwaggerDocs } from "../docs/login.swagger";
 import { MeSwaggerDocs } from "../docs/me.swagger";
 import { RegisterSwaggerDocs } from "../docs/register.swagger";
@@ -45,6 +44,6 @@ export class AuthController {
   @UseGuards(AuthenticationGuard)
   @UseInterceptors(UserInterceptor)
   me(@User() user: UserEntity) {
-    return mapUserToResponse(user);
+    return user;
   }
 }

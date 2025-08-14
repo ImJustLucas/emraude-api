@@ -3,7 +3,6 @@ import { ApiTags } from "@nestjs/swagger";
 
 import { GetUserSwaggerDocs } from "../docs/get-user.swagger";
 import { UsersService } from "../services/users.service";
-import { mapUserToResponse } from "../utils/user-mapper";
 
 @ApiTags("Users")
 @Controller("users")
@@ -14,6 +13,6 @@ export class UsersController {
   @GetUserSwaggerDocs()
   async getUserById(@Param("id") id: string) {
     const user = await this.usersService.findById(id);
-    return mapUserToResponse(user);
+    return user;
   }
 }
