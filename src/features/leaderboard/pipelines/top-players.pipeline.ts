@@ -12,7 +12,6 @@ export const createTopPlayersPipeline = (limit: number): PipelineStage[] => [
   {
     $limit: limit,
   },
-  // Convertir userId (string) en ObjectId pour le lookup
   {
     $addFields: {
       userObjectId: { $toObjectId: "$userId" },

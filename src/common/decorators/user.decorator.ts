@@ -14,12 +14,10 @@ export const User = createParamDecorator(
   ): UserEntity | string => {
     const request = ctx.switchToHttp().getRequest<IAuthenticatedRequest>();
 
-    // The user entity should be populated by UserInterceptor
     if (request.userEntity) {
       return data ? (request.userEntity[data] as string) : request.userEntity;
     }
 
-    // Throw error if no user is found
     throw new UnauthorizedException("User not found");
   },
 );

@@ -28,7 +28,6 @@ export class UserInterceptor implements NestInterceptor<unknown, unknown> {
         console.log("User entity loaded:", userEntity?.email);
       } catch (error) {
         console.log("Failed to load user entity:", error.message);
-        // Don't set userEntity if user not found - let the decorator handle it
         request.userEntity = undefined;
       }
     } else {
