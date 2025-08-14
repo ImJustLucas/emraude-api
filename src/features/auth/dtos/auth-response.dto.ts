@@ -2,7 +2,7 @@ import { UserRoleSchema } from "src/common/types";
 import { z } from "zod";
 
 export const UserResponseSchema = z.object({
-  id: z.string(),
+  _id: z.string(),
   email: z.email(),
   username: z.string(),
   role: UserRoleSchema,
